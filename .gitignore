@@ -1,0 +1,9 @@
+# Audio files
+*.wav
+*.mp3
+
+# Models
+models/
+*.bin
+
+node_modules
