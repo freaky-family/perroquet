@@ -1,6 +1,8 @@
 # Audio files
 *.wav
 *.mp3
+*.opus
+*.gg
 
 # Models
 models/
