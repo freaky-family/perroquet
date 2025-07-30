@@ -26,13 +26,17 @@ cd smart-whisper/whisper.cpp
 make libwhisper.a -j
 ```
 
-Then download the `openblas` library:
+Then install the requirements:
+- openblas library
+- ffmpeg
+
+Command to install on certain distros:
 ```sh
 # Debian / Ubuntu
-sudo apt-get install libopenblas-dev
+sudo apt-get install libopenblas-dev ffmpeg
 
 # Arch Linux
-pacman -S openblas
+pacman -S openblas ffmpeg
 
 # Search it yourself for other distros
 ```
