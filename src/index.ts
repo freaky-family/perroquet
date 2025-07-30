@@ -1,4 +1,5 @@
 import {
+    ActivityType,
     Client,
     Events,
     GatewayIntentBits,
@@ -41,6 +42,7 @@ client.once(Events.ClientReady, (readyClient) => {
     if (existsSync(AUDIO_DIRECTORY)) {
         rmSync(AUDIO_DIRECTORY, { recursive: true, force: true });
     }
+    client.user?.setActivity("voice messages", {type: ActivityType.Listening});
     console.log(`Logged in as ${readyClient.user.tag}!`);
 });
 
