@@ -10,6 +10,8 @@ Create a `models` directory at the root and download a binary from [here](https:
 
 Copy the `.env.example` into `.env` and fill it with your info.
 
+Follow [this guide](https://discordjs.guide/preparations/setting-up-a-bot-application.html#what-is-a-token-anyway) to create a discord bot and add it to your server with [this guide](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links).
+
 ### Docker (recommended)
 
 ```sh
