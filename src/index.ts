@@ -1,5 +1,5 @@
 import { Client, Events, GatewayIntentBits, ThreadAutoArchiveDuration } from "discord.js";
-import { createWriteStream, existsSync, mkdirSync } from "node:fs";
+import { createWriteStream, existsSync, mkdirSync, rmSync } from "node:fs";
 import "dotenv/config";
 import axios from "axios";
 import PerroquetAudio, { transform_ogg_wav } from "./audio";
@@ -29,7 +29,10 @@ const client = new Client({ intents: [
 ] });
 
 client.once(Events.ClientReady, readyClient => {
-  console.log(`Logged in as ${readyClient.user.tag}!`);
+    if (existsSync(AUDIO_DIRECTORY)) {
+        rmSync(AUDIO_DIRECTORY, {recursive: true, force: true});
+    }
+    console.log(`Logged in as ${readyClient.user.tag}!`);
 });
 
 client.on(Events.MessageCreate, async (message) => {
