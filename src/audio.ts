@@ -14,6 +14,7 @@ class Audio {
 	channel_data: Float32Array | null;
 	constructor(name: string, whisper?: Whisper, options: any = {}) {
 		this.name = name;
+
 		if (!whisper) {
 			if (!process.env.MODEL_PATH) {
 				throw new Error("Couldn't find env `MODEL_PATH`");
@@ -22,7 +23,11 @@ class Audio {
 		} else {
 			this.whisper = whisper;
 		}
+
 		this.options = options;
+		if (process.env.LANGUAGE) {
+			options["language"] = process.env.LANGUAGE;
+		}
 
 		this.channel_data = null;
 	}
