@@ -2,6 +2,8 @@ import {
     Client,
     Events,
     GatewayIntentBits,
+    Message,
+    MessageSnapshot,
     ThreadAutoArchiveDuration,
 } from "discord.js";
 import { createWriteStream, existsSync, mkdirSync, rmSync } from "node:fs";
@@ -47,7 +49,16 @@ client.on(Events.MessageCreate, async (message) => {
         return;
     }
 
-    let attachment = message.attachments.first();
+    let attachment_message: Message | MessageSnapshot = message;
+
+    if (message.reference && message.messageSnapshots) {
+        let reference =  message.messageSnapshots.first();
+        if (reference) {
+            attachment_message = reference;
+        }
+    }
+
+    let attachment = attachment_message.attachments.first();
 
     if (!attachment || attachment.contentType !== "audio/ogg") {
         return;
