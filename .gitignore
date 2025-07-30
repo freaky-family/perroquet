@@ -12,4 +12,5 @@
 models/
 *.bin
 
+audios/
 node_modules

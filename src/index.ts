@@ -1,11 +1,15 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import { existsSync, mkdirSync } from "node:fs";
+import { createWriteStream, existsSync, mkdirSync } from "node:fs";
 import "dotenv/config";
+import axios from "axios";
 
 const AUDIO_DIRECTORY = "audios";
 
 async function download_file(url: string, fileName: string) {
-    // TODO
+    const res = await axios.get(url, {responseType: "stream"});
+    const stream = createWriteStream(fileName);
+
+    res.data.pipe(stream);
 };
 
 const client = new Client({ intents: [
