@@ -4,6 +4,10 @@
 *.opus
 *.gg
 
+# ENV
+.env*
+!.env.example
+
 # Models
 models/
 *.bin
