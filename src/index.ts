@@ -6,10 +6,18 @@ import axios from "axios";
 const AUDIO_DIRECTORY = "audios";
 
 async function download_file(url: string, fileName: string) {
-    const res = await axios.get(url, {responseType: "stream"});
-    const stream = createWriteStream(fileName);
+    try {
+        const res = await axios.get(url, {responseType: "stream"});
+        const stream = createWriteStream(fileName);
 
-    res.data.pipe(stream);
+        res.data.pipe(stream);
+        return new Promise((resolve, reject) => {
+            stream.on("finish", () => resolve(fileName));
+            stream.on("error", () => reject("Couldn't write file"));
+        });
+    } catch (err) {
+        throw err;
+    }
 };
 
 const client = new Client({ intents: [
@@ -37,8 +45,10 @@ client.on(Events.MessageCreate, async (message) => {
         mkdirSync(AUDIO_DIRECTORY);
     }
 
+    let fileName = `${AUDIO_DIRECTORY}/${Date.now()}.ogg`;
+
     try {
-        download_file(attachment.url, `${AUDIO_DIRECTORY}/test.ogg`);
+        await download_file(attachment.url, fileName);
     } catch (err) {
         console.error(`Couldn't download file: ${err}`);
     }
