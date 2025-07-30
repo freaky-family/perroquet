@@ -5,6 +5,7 @@ import {
     GatewayIntentBits,
     Message,
     MessageSnapshot,
+    Partials,
     ThreadAutoArchiveDuration,
 } from "discord.js";
 import { createWriteStream, existsSync, mkdirSync, rmSync } from "node:fs";
@@ -35,7 +36,12 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages
     ],
+    partials: [
+        Partials.Channel,
+        Partials.Message
+    ]
 });
 
 client.once(Events.ClientReady, (readyClient) => {
