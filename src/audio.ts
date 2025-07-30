@@ -7,59 +7,62 @@ const SAMPLE_RATE = 16000;
 const CHANNEL_DATA_SIZE = 1;
 
 class Audio {
-	name: string;
+    name: string;
     whisper: Whisper;
-	options: any;
+    options: any;
 
-	channel_data: Float32Array | null;
-	constructor(name: string, whisper?: Whisper, options: any = {}) {
-		this.name = name;
+    channel_data: Float32Array | null;
+    constructor(name: string, whisper?: Whisper, options: any = {}) {
+        this.name = name;
 
-		if (!whisper) {
-			if (!process.env.MODEL_PATH) {
-				throw new Error("Couldn't find env `MODEL_PATH`");
-			}
-			this.whisper = new Whisper(process.env.MODEL_PATH, {gpu: true});
-		} else {
-			this.whisper = whisper;
-		}
+        if (!whisper) {
+            if (!process.env.MODEL_PATH) {
+                throw new Error("Couldn't find env `MODEL_PATH`");
+            }
+            this.whisper = new Whisper(process.env.MODEL_PATH, { gpu: true });
+        } else {
+            this.whisper = whisper;
+        }
 
-		this.options = options;
-		if (process.env.LANGUAGE) {
-			options["language"] = process.env.LANGUAGE;
-		}
+        this.options = options;
+        if (process.env.LANGUAGE) {
+            options["language"] = process.env.LANGUAGE;
+        }
 
-		this.channel_data = null;
-	}
+        this.channel_data = null;
+    }
 
-	read() {
-		const { sampleRate, channelData } = decode(fs.readFileSync(this.name));
+    read() {
+        const { sampleRate, channelData } = decode(fs.readFileSync(this.name));
 
-		if (sampleRate !== SAMPLE_RATE) {
-			throw new Error(`Invalid sample rate: ${sampleRate}`);
-		}
-		if (channelData.length !== CHANNEL_DATA_SIZE) {
-			throw new Error(`Invalid channel count: ${channelData.length}`);
-		}
+        if (sampleRate !== SAMPLE_RATE) {
+            throw new Error(`Invalid sample rate: ${sampleRate}`);
+        }
+        if (channelData.length !== CHANNEL_DATA_SIZE) {
+            throw new Error(`Invalid channel count: ${channelData.length}`);
+        }
 
-		this.channel_data = channelData[0];
+        this.channel_data = channelData[0];
         return this.channel_data;
-	}
+    }
 
-	async transcribe() {
-		if (!this.channel_data) {
-			throw new Error(`No channel_data, try reading the file before`);
-		}
+    async transcribe() {
+        if (!this.channel_data) {
+            throw new Error(`No channel_data, try reading the file before`);
+        }
 
-		const task = await this.whisper.transcribe(this.channel_data, this.options);
-		return await task.result;
-	}
+        const task = await this.whisper.transcribe(
+            this.channel_data,
+            this.options
+        );
+        return await task.result;
+    }
 }
 
 export function transform_ogg_wav(fileName: string) {
-	let newFileName = fileName.replace(".ogg", ".wav");
-	execSync(`ffmpeg -i ${fileName} -ar 16000 -ac 1 ${newFileName}`);
-	return newFileName
+    let newFileName = fileName.replace(".ogg", ".wav");
+    execSync(`ffmpeg -i ${fileName} -ar 16000 -ac 1 ${newFileName}`);
+    return newFileName;
 }
 
 export default Audio;

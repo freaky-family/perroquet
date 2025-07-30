@@ -23,9 +23,11 @@ ffmpeg -i input.any -ar 16000 -ac 1 output.wav
 ```
 
 # Models
+
 https://huggingface.co/ggerganov/whisper.cpp/blob/main/ggml-base.bin
 
 # Run
+
 ```sh
 npx tsx index.ts <model> ./output.wav
 ```

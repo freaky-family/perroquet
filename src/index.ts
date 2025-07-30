@@ -1,4 +1,9 @@
-import { Client, Events, GatewayIntentBits, ThreadAutoArchiveDuration } from "discord.js";
+import {
+    Client,
+    Events,
+    GatewayIntentBits,
+    ThreadAutoArchiveDuration,
+} from "discord.js";
 import { createWriteStream, existsSync, mkdirSync, rmSync } from "node:fs";
 import "dotenv/config";
 import axios from "axios";
@@ -9,7 +14,7 @@ const CREATE_THREAD = process.env.THREAD === "true" ? true : false;
 
 async function download_file(url: string, fileName: string) {
     try {
-        const res = await axios.get(url, {responseType: "stream"});
+        const res = await axios.get(url, { responseType: "stream" });
         const stream = createWriteStream(fileName);
 
         res.data.pipe(stream);
@@ -20,17 +25,19 @@ async function download_file(url: string, fileName: string) {
     } catch (err) {
         throw err;
     }
-};
+}
 
-const client = new Client({ intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-] });
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ],
+});
 
-client.once(Events.ClientReady, readyClient => {
+client.once(Events.ClientReady, (readyClient) => {
     if (existsSync(AUDIO_DIRECTORY)) {
-        rmSync(AUDIO_DIRECTORY, {recursive: true, force: true});
+        rmSync(AUDIO_DIRECTORY, { recursive: true, force: true });
     }
     console.log(`Logged in as ${readyClient.user.tag}!`);
 });
@@ -76,9 +83,15 @@ client.on(Events.MessageCreate, async (message) => {
                 name: "Transcription",
                 autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
             });
-            thread.send({allowedMentions: {repliedUser: false}, content: full_text});
+            thread.send({
+                allowedMentions: { repliedUser: false },
+                content: full_text,
+            });
         } else {
-            message.reply({allowedMentions: {repliedUser: false}, content: full_text});
+            message.reply({
+                allowedMentions: { repliedUser: false },
+                content: full_text,
+            });
         }
     } catch (err) {
         console.error(`Couldn't transcribe file: ${err}`);

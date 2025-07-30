@@ -1,27 +1,27 @@
 {
-  "name": "perroquet",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.ts",
-  "scripts": {
-    "start": "tsx src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "axios": "^1.11.0",
-    "discord.js": "^14.21.0",
-    "dotenv": "^17.2.1",
-    "node-wav": "^0.0.2",
-    "smart-whisper": "^0.8.1"
-  },
-  "devDependencies": {
-    "@types/node": "^24.1.0",
-    "@types/node-wav": "^0.0.4",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
-  }
+    "name": "perroquet",
+    "version": "1.0.0",
+    "description": "",
+    "author": "",
+    "main": "src/index.ts",
+    "scripts": {
+        "start": "tsx src/index.ts",
+        "dev:format": "prettier . --write"
+    },
+    "license": "ISC",
+    "type": "commonjs",
+    "dependencies": {
+        "axios": "^1.11.0",
+        "discord.js": "^14.21.0",
+        "dotenv": "^17.2.1",
+        "node-wav": "^0.0.2",
+        "smart-whisper": "^0.8.1"
+    },
+    "devDependencies": {
+        "@types/node": "^24.1.0",
+        "@types/node-wav": "^0.0.4",
+        "prettier": "3.6.2",
+        "tsx": "^4.20.3",
+        "typescript": "^5.8.3"
+    }
 }
