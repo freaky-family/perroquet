@@ -1,10 +1,11 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { Client, Events, GatewayIntentBits, ThreadAutoArchiveDuration } from "discord.js";
 import { createWriteStream, existsSync, mkdirSync } from "node:fs";
 import "dotenv/config";
 import axios from "axios";
 import PerroquetAudio, { transform_ogg_wav } from "./audio";
 
 const AUDIO_DIRECTORY = "audios";
+const CREATE_THREAD = process.env.THREAD === "true" ? true : false;
 
 async function download_file(url: string, fileName: string) {
     try {
@@ -61,7 +62,21 @@ client.on(Events.MessageCreate, async (message) => {
 
         let transcription = await audio.transcribe();
         audio.whisper.free();
-        console.log(JSON.stringify(transcription));
+
+        let full_text = "";
+        transcription.forEach((part) => {
+            full_text += part.text;
+        });
+
+        if (CREATE_THREAD) {
+            let thread = await message.startThread({
+                name: "Transcription",
+                autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
+            });
+            thread.send({allowedMentions: {repliedUser: false}, content: full_text});
+        } else {
+            message.reply({allowedMentions: {repliedUser: false}, content: full_text});
+        }
     } catch (err) {
         console.error(`Couldn't transcribe file: ${err}`);
     }
