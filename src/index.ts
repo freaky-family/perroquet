@@ -42,7 +42,9 @@ client.once(Events.ClientReady, (readyClient) => {
     if (existsSync(AUDIO_DIRECTORY)) {
         rmSync(AUDIO_DIRECTORY, { recursive: true, force: true });
     }
-    client.user?.setActivity("voice messages", {type: ActivityType.Listening});
+    client.user?.setActivity("voice messages", {
+        type: ActivityType.Listening,
+    });
     console.log(`Logged in as ${readyClient.user.tag}!`);
 });
 
@@ -54,7 +56,7 @@ client.on(Events.MessageCreate, async (message) => {
     let attachment_message: Message | MessageSnapshot = message;
 
     if (message.reference && message.messageSnapshots) {
-        let reference =  message.messageSnapshots.first();
+        let reference = message.messageSnapshots.first();
         if (reference) {
             attachment_message = reference;
         }

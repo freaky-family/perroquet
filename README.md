@@ -20,6 +20,7 @@ docker run -v ./.env:/app/perroquet/.env -v ./models/:/app/perroquet/models perr
 ### From source
 
 Clone the `smart-whisper` repository and compile `libwhisper.a`:
+
 ```sh
 git clone --recursive https://github.com/JacobLinCool/smart-whisper.git
 cd smart-whisper/whisper.cpp
@@ -27,10 +28,12 @@ make libwhisper.a -j
 ```
 
 Then install the requirements:
+
 - openblas library
 - ffmpeg
 
 Command to install on certain distros:
+
 ```sh
 # Debian / Ubuntu
 sudo apt-get install libopenblas-dev ffmpeg
@@ -42,11 +45,13 @@ pacman -S openblas ffmpeg
 ```
 
 Then install manually the `smart-whisper` module:
+
 ```sh
 BYOL="$PWD/smart-whisper/whisper.cpp/libwhisper.a -lopenblas" npm install smart-whisper
 ```
 
 And install the rest of the modules:
+
 ```sh
 npm install
 ```
