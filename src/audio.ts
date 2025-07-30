@@ -19,7 +19,10 @@ class Audio {
             if (!process.env.MODEL_PATH) {
                 throw new Error("Couldn't find env `MODEL_PATH`");
             }
-            this.whisper = new Whisper(process.env.MODEL_PATH, { gpu: true });
+            let whisper_options = {
+                gpu: process.env.DISABLE_GPU === "true" ? false : true,
+            };
+            this.whisper = new Whisper(process.env.MODEL_PATH, whisper_options);
         } else {
             this.whisper = whisper;
         }
