@@ -2,6 +2,7 @@ import { Client, Events, GatewayIntentBits } from "discord.js";
 import { createWriteStream, existsSync, mkdirSync } from "node:fs";
 import "dotenv/config";
 import axios from "axios";
+import PerroquetAudio, { transform_ogg_wav } from "./audio";
 
 const AUDIO_DIRECTORY = "audios";
 
@@ -53,7 +54,17 @@ client.on(Events.MessageCreate, async (message) => {
         console.error(`Couldn't download file: ${err}`);
     }
 
+    try {
+        fileName = transform_ogg_wav(fileName);
+        const audio = new PerroquetAudio(fileName);
+        audio.read();
 
+        let transcription = await audio.transcribe();
+        audio.whisper.free();
+        console.log(JSON.stringify(transcription));
+    } catch (err) {
+        console.error(`Couldn't transcribe file: ${err}`);
+    }
 });
 
 client.login(process.env.TOKEN);
