@@ -12,6 +12,7 @@ import { createWriteStream, existsSync, mkdirSync, rmSync } from "node:fs";
 import "dotenv/config";
 import axios from "axios";
 import PerroquetAudio, { transform_ogg_wav } from "./audio";
+import winston from "winston";
 
 const AUDIO_DIRECTORY = "audios";
 const CREATE_THREAD = process.env.THREAD === "true" ? true : false;
@@ -44,11 +45,12 @@ const client = new Client({
 client.once(Events.ClientReady, (readyClient) => {
     if (existsSync(AUDIO_DIRECTORY)) {
         rmSync(AUDIO_DIRECTORY, { recursive: true, force: true });
+        winston.debug(`Deleted ${AUDIO_DIRECTORY}`);
     }
     client.user?.setActivity("voice messages", {
         type: ActivityType.Listening,
     });
-    console.log(`Logged in as ${readyClient.user.tag}!`);
+    winston.info(`Logged in as ${readyClient.user.tag}!`);
 });
 
 client.on(Events.MessageCreate, async (message) => {
@@ -72,15 +74,19 @@ client.on(Events.MessageCreate, async (message) => {
     }
 
     if (!existsSync(AUDIO_DIRECTORY)) {
+        winston.debug(`${AUDIO_DIRECTORY} created`);
         mkdirSync(AUDIO_DIRECTORY);
     }
 
     let fileName = `${AUDIO_DIRECTORY}/${Date.now()}.ogg`;
 
+    winston.info(`Found new voice message`);
+
     try {
         await download_file(attachment.url, fileName);
+        winston.debug(`Downloaded file ${fileName}`);
     } catch (err) {
-        console.error(`Couldn't download file: ${err}`);
+        winston.error(`Couldn't download file: ${err}`);
     }
 
     try {
@@ -89,6 +95,7 @@ client.on(Events.MessageCreate, async (message) => {
         audio.read();
 
         let transcription = await audio.transcribe();
+        winston.info(`Finished transcribing`);
         audio.whisper.free();
 
         let full_text = "";
@@ -112,7 +119,7 @@ client.on(Events.MessageCreate, async (message) => {
             });
         }
     } catch (err) {
-        console.error(`Couldn't transcribe file: ${err}`);
+        winston.error(`Couldn't transcribe file: ${err}`);
     }
 });
 
